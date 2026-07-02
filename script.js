@@ -6,12 +6,14 @@
 
   /* ---- Sticky / shrinking header ---- */
   var header = document.getElementById("siteHeader");
-  function onScroll() {
-    if (window.scrollY > 24) header.classList.add("scrolled");
-    else header.classList.remove("scrolled");
+  if (header) {
+    var onScroll = function () {
+      if (window.scrollY > 24) header.classList.add("scrolled");
+      else header.classList.remove("scrolled");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
   }
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
 
   /* ---- Mobile nav toggle ---- */
   var toggle = document.getElementById("navToggle");
@@ -52,29 +54,8 @@
           obs.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
     revealEls.forEach(function (el) { io.observe(el); });
-  }
-
-  /* ---- Booking form (non-wired demo) ---- */
-  var bookBtn = document.getElementById("bookSubmit");
-  var bookNote = document.getElementById("bookNote");
-  if (bookBtn && bookNote) {
-    bookBtn.addEventListener("click", function () {
-      var name = (document.getElementById("bf-name") || {}).value || "";
-      var svc = (document.getElementById("bf-service") || {}).value || "your service";
-      var first = name.trim().split(/\s+/)[0];
-      bookNote.classList.add("success");
-      bookNote.textContent = first
-        ? "Thanks, " + first + "! Your " + svc + " request is noted — we'll text to confirm. (Demo)"
-        : "Request received for " + svc + " — we'll text to confirm your time. (Demo)";
-      if (!prefersReduced) {
-        bookBtn.animate(
-          [{ transform: "scale(1)" }, { transform: "scale(.97)" }, { transform: "scale(1)" }],
-          { duration: 240, easing: "ease-out" }
-        );
-      }
-    });
   }
 
   /* ---- Current year in footer ---- */

@@ -1,39 +1,63 @@
 # NeO Nails & Beauty Bar — Website Redesign Concept
 
-An unsolicited redesign concept for **NeO Nails & Beauty Bar**, an upscale-but-affordable nail salon and beauty bar in Prairieville, Louisiana.
+An unsolicited redesign concept for **NeO Nails & Beauty Bar**, a nail salon and beauty bar in
+Prairieville, Louisiana — *"professional nail care for ladies & gentlemen; top-line products,
+expert technique, affordable price."*
 
-This is a single-page, fully static concept — no build step, no frameworks. It's meant to show the owner what a polished, boutique-feeling site could look like, built around the booking flow they already offer.
+This is a single-page, fully static concept — no build step, no frameworks. It shows the owner
+what a polished, editorial, boutique-feeling site could look like, built directly around the
+**real online booking system they already use**.
 
 ## Why this redesign
 
 The current site (neonailsbeautybar.com) undersells a business whose actual work is beautiful:
 
-- **Dated, generic template.** The current design reads like an off-the-shelf pink theme rather than a distinctive brand — it doesn't feel upscale, and it looks like a hundred other salon sites.
-- **Stock-photo look.** Generic imagery instead of a designed, on-brand visual identity.
-- **A leftover `ONLINE_BOOKING` label artifact** in the navigation — a rough edge that makes the site feel unfinished.
-- **The booking they already have isn't the star.** They already take appointments online; this redesign makes the brand around that booking flow look as polished as the nails they produce.
+- **Dated, template-y look.** The current design reads like an off-the-shelf theme rather than a
+  distinctive brand — it doesn't feel upscale, and it looks like many other salon sites.
+- **Booking is buried.** They already take appointments online, but the booking flow isn't the
+  star of the page. This concept makes "Book Online" the primary action everywhere.
+- **The menu is hard to scan.** Their full, genuinely rich price list (five tiers of pedicures,
+  extensions, lashes, dip/ombré sets) deserves a clean, confident menu layout.
 
-This concept keeps everything they're known for — **top products, expert technique, affordable price** — and gives it an elegant, modern, upscale-feminine look (soft blush/rose + warm gold + clean white, refined type, delicate SVG florals and sparkles, smooth motion).
+This redesign is an **obvious upgrade in clarity, structure and polish** — not a clone of the
+current layout. New direction: warm ivory + deep plum + muted rose & bronze, an editorial serif
+(Fraunces) paired with a clean sans (Manrope), alternating image/text feature rows, a dark
+full-menu section, and refined scroll/hover motion.
+
+## Real business data used
+
+Everything on the page is pulled from their live site:
+
+- **Real photography** downloaded from their own site's gallery (hero + experience + gallery),
+  optimized and stored in `assets/photos/`.
+- **Real, complete menu & prices** — pedicures, natural nail care, enhancements/sets, lashes,
+  waxing, add-ons, and kids' services.
+- **Real hours:** Mon–Fri 9:00 AM–6:30 PM · Sat 9:00 AM–6:00 PM · Sun closed.
+- **Real address:** 17385 Airline Hwy, Ste 3, Prairieville, LA 70769.
+- **Real phone:** (225) 673-1093 (click-to-call).
+- **Real online booking:** every "Book Online" button links to their actual scheduler
+  (`nailsolutionplus.firebaseapp.com/...`). No mock/fake scheduler.
 
 ## What's included
 
-- Sticky, shrinking header with smooth-scroll navigation
-- Hero with a clear **Book Online** call-to-action and click-to-call
-- **Services** overview (manicures, spa pedicures, gel/dip, acrylic sets, nail art, lashes, waxing)
-- A **services + prices menu** section
-- A **nail-art gallery** with elegant gradient placeholders
-- A styled **Book Online** form (money feature — UI only, not wired to a backend)
-- Testimonials, hours/location, and a click-to-call phone link — `(225) 673-1093`
-- Scroll-reveal animations, hover motion, and `prefers-reduced-motion` support
+- Sticky, shrink-on-scroll header with animated underline nav and a real mobile menu
+- Hero with real photography and a primary **Book Online** CTA + click-to-call
+- **Experience** — alternating editorial image/text rows (calm space, pedicure tiers, full beauty bar)
+- **Menu & Prices** — a dark, scannable two-column real price menu
+- **Gallery** — a mosaic of their real nail/salon photography
+- **Book Online** — a feature panel linking straight to their live booking system
+- Reviews, real hours table, address with map link, click-to-call phone
+- Scroll-reveal, hover motion, and full `prefers-reduced-motion` support
 - Responsive from 360px phones to widescreen
 
 ## How to view
 
-Just open **`index.html`** in any browser (double-click it) — everything runs locally with no server or build step.
+Open **`index.html`** in any browser (double-click it) — everything runs locally, no server or
+build step.
 
 ## Notes
 
-- Fully static: `index.html` + `styles.css` + `script.js`. The only external dependency is a single Google Fonts `<link>` (Cormorant Garamond + Jost).
-- Photos are represented by tasteful gradient placeholders marked with `data-photo` comments, ready to swap in real imagery.
-- The booking form is a styled demo and is not connected to a scheduling backend.
+- Fully static: `index.html` + `styles.css` + `script.js` + `assets/photos/`. The only external
+  dependency is a single Google Fonts `<link>` (Fraunces + Manrope).
+- Photos are the business's own images from their public website, used to represent their real work.
 - This is an **unsolicited concept pitch**, not an official NeO Nails & Beauty Bar property.
