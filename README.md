@@ -66,7 +66,7 @@ On-page SEO is baked in for local search:
 
 **Base URL placeholder:** the canonical link, `og:url`, `twitter:image`, sitemap `<loc>`,
 `robots.txt` Sitemap line, and the JSON-LD `url`/`image` all use the literal placeholder
-`https://REPLACE-WITH-DOMAIN.com/`. At deploy, do a single find/replace of `REPLACE-WITH-DOMAIN.com`
+`https://neonailsbeautybar.com/`. At deploy, do a single find/replace of `neonailsbeautybar.com`
 with the real domain across `index.html`, `sitemap.xml`, and `robots.txt`.
 
 ## Notes
