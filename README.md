@@ -55,6 +55,20 @@ Everything on the page is pulled from their live site:
 Open **`index.html`** in any browser (double-click it) — everything runs locally, no server or
 build step.
 
+## SEO
+
+On-page SEO is baked in for local search:
+
+- **JSON-LD structured data** (`@type: BeautySalon`) in `<head>` with real name, phone, address,
+  opening hours, `priceRange`, image, url, `sameAs` (their live booking system) and a `ReserveAction`.
+- **Canonical**, complete **Open Graph** + **Twitter Card** tags, **`robots.txt`**, and **`sitemap.xml`**.
+- One `<h1>`; keyword-aware `<title>`/meta description; descriptive `alt` on every image.
+
+**Base URL placeholder:** the canonical link, `og:url`, `twitter:image`, sitemap `<loc>`,
+`robots.txt` Sitemap line, and the JSON-LD `url`/`image` all use the literal placeholder
+`https://REPLACE-WITH-DOMAIN.com/`. At deploy, do a single find/replace of `REPLACE-WITH-DOMAIN.com`
+with the real domain across `index.html`, `sitemap.xml`, and `robots.txt`.
+
 ## Notes
 
 - Fully static: `index.html` + `styles.css` + `script.js` + `assets/photos/`. The only external
