@@ -386,6 +386,7 @@ a.vd-value:hover { color: var(--rose-600); }
   .nav-cta { margin-top: .4rem; }
   .nav-cta .btn { width: 100%; }
   body.nav-open { overflow: hidden; }
+  html.nav-open { overflow: hidden; }
 
   .feature-row { grid-template-columns: 1fr; gap: 1.4rem; }
   .feature-row--reverse .feature-media { order: -1; }

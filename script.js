@@ -60,30 +60,87 @@
         // move drawer into the fixed clip wrapper
         shell.appendChild(menu);
         relocated = true;
+        if (!menu.classList.contains("open")) setMenuHidden(true);
       } else if (!mq.matches && relocated) {
         // move drawer back into the header for desktop layout
         placeholder.parentNode.insertBefore(menu, placeholder);
         relocated = false;
         closeNav();
+        // Desktop nav is always visible + tabbable.
+        setMenuHidden(false);
       }
     }
 
+    var docEl = document.documentElement;
+
+    function focusableInMenu() {
+      return Array.prototype.slice.call(
+        menu.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      ).filter(function (el) {
+        return el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement;
+      });
+    }
+
+    // Keep the off-canvas drawer out of the tab order + AT when it's closed.
+    function setMenuHidden(hidden) {
+      if (hidden) {
+        menu.setAttribute("aria-hidden", "true");
+        if ("inert" in menu) menu.inert = true;
+      } else {
+        menu.removeAttribute("aria-hidden");
+        if ("inert" in menu) menu.inert = false;
+      }
+    }
+
+    // Mark the rest of the page inert while the drawer is open.
+    function setBackgroundInert(on) {
+      if (header) {
+        if (on) header.setAttribute("aria-hidden", "true");
+        else header.removeAttribute("aria-hidden");
+      }
+      var main = document.getElementById("main");
+      var footer = document.querySelector("footer");
+      [main, footer].forEach(function (el) {
+        if (!el) return;
+        if (on) {
+          el.setAttribute("aria-hidden", "true");
+          if ("inert" in el) el.inert = true;
+        } else {
+          el.removeAttribute("aria-hidden");
+          if ("inert" in el) el.inert = false;
+        }
+      });
+    }
+
     function openNav() {
+      setMenuHidden(false);
       menu.classList.add("open");
       scrim.classList.add("open");
       shell.classList.add("active");
       toggle.setAttribute("aria-expanded", "true");
       toggle.setAttribute("aria-label", "Close menu");
       document.body.classList.add("nav-open");
+      docEl.classList.add("nav-open");
       if (header) header.classList.remove("header-hidden");
+      setBackgroundInert(true);
+      // Move focus into the drawer.
+      var first = focusableInMenu()[0];
+      if (first) first.focus();
     }
     function closeNav() {
+      var wasOpen = menu.classList.contains("open");
       menu.classList.remove("open");
       scrim.classList.remove("open");
       shell.classList.remove("active");
       toggle.setAttribute("aria-expanded", "false");
       toggle.setAttribute("aria-label", "Open menu");
       document.body.classList.remove("nav-open");
+      docEl.classList.remove("nav-open");
+      setBackgroundInert(false);
+      // Only hide from tab order while in mobile drawer mode.
+      if (relocated) setMenuHidden(true);
+      // Return focus to the toggle when the drawer had been open.
+      if (wasOpen && mq.matches) toggle.focus();
     }
 
     toggle.addEventListener("click", function () {
@@ -100,15 +157,42 @@
     });
 
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && menu.classList.contains("open")) {
+      if (!menu.classList.contains("open")) return;
+      if (e.key === "Escape") {
         closeNav();
         toggle.focus();
+        return;
+      }
+      if (e.key === "Tab") {
+        // Trap focus within the drawer.
+        var items = focusableInMenu();
+        if (!items.length) {
+          e.preventDefault();
+          return;
+        }
+        var firstEl = items[0];
+        var lastEl = items[items.length - 1];
+        var active = document.activeElement;
+        if (e.shiftKey) {
+          if (active === firstEl || !menu.contains(active)) {
+            e.preventDefault();
+            lastEl.focus();
+          }
+        } else {
+          if (active === lastEl || !menu.contains(active)) {
+            e.preventDefault();
+            firstEl.focus();
+          }
+        }
       }
     });
 
     if (mq.addEventListener) mq.addEventListener("change", relocate);
     else if (mq.addListener) mq.addListener(relocate);
     relocate();
+    // Initialize hidden state for the drawer depending on layout.
+    if (relocated) setMenuHidden(true);
+    else setMenuHidden(false);
   }
 
   /* ---- Scroll-reveal via IntersectionObserver ---- */
