@@ -46,6 +46,9 @@ body {
   max-width: 100%;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  /* Prevent the browser's scroll-anchoring from nudging the page when the
+     mobile drawer swaps the header between sticky/fixed on open/close. */
+  overflow-anchor: none;
 }
 
 h1, h2, h3 {
@@ -365,6 +368,20 @@ a.vd-value:hover { color: var(--rose-600); }
 
 @media (max-width: 760px) {
   .nav-toggle { display: flex; }
+
+  /* Top-left brand: the circular "NeO" badge cramped the wordmark on mobile
+     (the O clipped the ring). Drop the circle and set "NeO" inline as a serif
+     wordmark that reads continuously with "Nails & Beauty Bar" — uncramped. */
+  .brand { gap: .5rem; align-items: baseline; }
+  .brand-mark {
+    width: auto; height: auto; border-radius: 0;
+    background: none; color: var(--plum-900);
+    font-size: 1.5rem; line-height: 1;
+    display: inline; place-items: unset;
+  }
+  .site-header.scrolled .brand-mark { transform: none; }
+  .brand:hover .brand-mark { background: none; transform: none; color: var(--rose-600); }
+  .brand-text { justify-content: center; }
   .nav-menu {
     position: fixed; inset: 0 0 0 auto; width: min(82vw, 340px);
     flex-direction: column; align-items: flex-start; gap: 1.4rem;
@@ -385,8 +402,13 @@ a.vd-value:hover { color: var(--rose-600); }
   .nav-menu > li > a:not(.btn)::after { background: var(--bronze-400); }
   .nav-cta { margin-top: .4rem; }
   .nav-cta .btn { width: 100%; }
-  body.nav-open { overflow: hidden; }
-  html.nav-open { overflow: hidden; }
+  /* Scroll-lock: pin the body in place (offset set from JS) so opening the
+     drawer never scrolls/jumps the page. Restored on close. */
+  body.nav-open { position: fixed; left: 0; right: 0; width: 100%; overflow: hidden; }
+  /* With the body pinned, a sticky header won't hold the viewport top, so the
+     close (X) could scroll away. Fix the header to the viewport while open so
+     the X is always visible at any scroll position. */
+  body.nav-open .site-header { position: fixed; top: 0; left: 0; right: 0; }
 
   .feature-row { grid-template-columns: 1fr; gap: 1.4rem; }
   .feature-row--reverse .feature-media { order: -1; }

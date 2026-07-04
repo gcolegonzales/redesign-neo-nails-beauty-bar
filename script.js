@@ -72,6 +72,7 @@
     }
 
     var docEl = document.documentElement;
+    var lockedScrollY = 0;
 
     function focusableInMenu() {
       return Array.prototype.slice.call(
@@ -119,13 +120,19 @@
       shell.classList.add("active");
       toggle.setAttribute("aria-expanded", "true");
       toggle.setAttribute("aria-label", "Close menu");
+      // Pin the page in place so opening never scrolls/jumps to the top.
+      lockedScrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.style.top = -lockedScrollY + "px";
       document.body.classList.add("nav-open");
       docEl.classList.add("nav-open");
       if (header) header.classList.remove("header-hidden");
       setBackgroundInert(true);
-      // Move focus into the drawer.
+      // Move focus into the drawer (preventScroll so opening never jumps the page).
       var first = focusableInMenu()[0];
-      if (first) first.focus();
+      if (first) {
+        try { first.focus({ preventScroll: true }); }
+        catch (e) { first.focus(); }
+      }
     }
     function closeNav() {
       var wasOpen = menu.classList.contains("open");
@@ -134,13 +141,30 @@
       shell.classList.remove("active");
       toggle.setAttribute("aria-expanded", "false");
       toggle.setAttribute("aria-label", "Open menu");
+      var hadLock = document.body.classList.contains("nav-open");
       document.body.classList.remove("nav-open");
       docEl.classList.remove("nav-open");
+      // Release the scroll-lock and restore the exact scroll position.
+      // Body is no longer fixed now, so the page height is back; restore
+      // instantly (bypass smooth-scroll) to the captured offset — no jump.
+      document.body.style.top = "";
+      if (hadLock) {
+        var prevBehavior = docEl.style.scrollBehavior;
+        docEl.style.scrollBehavior = "auto";
+        // Force layout to fully re-expand (body is static again) before we
+        // restore, so scrollTo isn't clamped to a momentarily-shorter page.
+        void document.body.offsetHeight;
+        window.scrollTo(0, lockedScrollY);
+        docEl.style.scrollBehavior = prevBehavior;
+      }
       setBackgroundInert(false);
       // Only hide from tab order while in mobile drawer mode.
       if (relocated) setMenuHidden(true);
       // Return focus to the toggle when the drawer had been open.
-      if (wasOpen && mq.matches) toggle.focus();
+      if (wasOpen && mq.matches) {
+        try { toggle.focus({ preventScroll: true }); }
+        catch (e) { toggle.focus(); }
+      }
     }
 
     toggle.addEventListener("click", function () {
@@ -160,7 +184,8 @@
       if (!menu.classList.contains("open")) return;
       if (e.key === "Escape") {
         closeNav();
-        toggle.focus();
+        try { toggle.focus({ preventScroll: true }); }
+        catch (err) { toggle.focus(); }
         return;
       }
       if (e.key === "Tab") {
