@@ -149,6 +149,7 @@ em { font-style: italic; color: var(--rose-500); }
 
 .main-nav { display: flex; align-items: center; }
 .nav-menu { display: flex; align-items: center; gap: 2rem; list-style: none; margin: 0; padding: 0; }
+.nav-close-li { display: none; } /* drawer-only close; shown at <=760px */
 .nav-menu > li > a:not(.btn) { font-size: .95rem; font-weight: 600; color: var(--plum-700); position: relative; padding-block: .3rem; transition: color .2s var(--ease); }
 .nav-menu > li > a:not(.btn)::after {
   content: ""; position: absolute; left: 0; bottom: -1px; height: 2px; width: 0;
@@ -389,7 +390,7 @@ a.vd-value:hover { color: var(--rose-600); }
     padding: 5.5rem 1.6rem 2rem 2rem;
     box-shadow: -20px 0 60px rgba(42,29,38,.4);
     transform: translateX(105%); transition: transform .4s var(--ease);
-    z-index: 120; overflow-y: auto;
+    z-index: 150; overflow-y: auto; /* above the header (140) so the in-drawer X isn't covered */
     -webkit-tap-highlight-color: transparent; user-select: none;
   }
   .nav-menu.open { transform: translateX(0); }
@@ -401,7 +402,44 @@ a.vd-value:hover { color: var(--rose-600); }
   .nav-menu > li > a:not(.btn):hover { color: var(--bronze-400); }
   .nav-menu > li > a:not(.btn)::after { background: var(--bronze-400); }
   .nav-cta { margin-top: .4rem; }
-  .nav-cta .btn { width: 100%; }
+  /* Book Online sat plum-on-plum (btn bg == drawer bg) so it read as bare text.
+     Give it a bronze fill that clearly reads as a button on the dark drawer. */
+  .nav-cta .btn {
+    width: 100%; background: var(--bronze-400); color: var(--plum-900);
+    box-shadow: none; font-weight: 700;
+  }
+  .nav-cta .btn:hover { background: #fff; color: var(--plum-900); }
+
+  /* In-drawer close (X) — a clearly visible white affordance. The header
+     hamburger's bars were dark-on-dark against the open drawer (invisible),
+     so it read as "no close button". Hide that ghost control while open and
+     use this explicit X instead. */
+  /* display:contents so the <li> generates no box (the generic
+     `.nav-menu > li { width:100% }` rule would otherwise stretch it and push
+     the button to the left edge, over the brand). The button positions itself. */
+  .nav-close-li { display: contents; }
+  .nav-close {
+    position: absolute; top: 1.05rem; right: 1.15rem; z-index: 2;
+    width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+    background: rgba(255,255,255,.12); cursor: pointer;
+    display: grid; place-items: center;
+    -webkit-tap-highlight-color: transparent; transition: background .18s var(--ease);
+  }
+  .nav-close:hover, .nav-close:focus-visible { background: rgba(255,255,255,.22); }
+  .nav-close span {
+    position: absolute; width: 21px; height: 2.4px; border-radius: 2px; background: #fff;
+  }
+  .nav-close span:first-child { transform: rotate(45deg); }
+  .nav-close span:last-child { transform: rotate(-45deg); }
+  /* display:none (not opacity:0) so main-nav's in-flow box collapses — otherwise
+     that box lingers over the drawer's top-right and covers the in-drawer X. */
+  body.nav-open .nav-toggle { display: none; }
+  /* The transparent header bar paints over the drawer (the drawer is a header
+     descendant, so z-index can't lift it out) and silently swallows taps on the
+     in-drawer X — the X shows through because the header is see-through. Make the
+     header non-interactive while open, but keep the drawer itself tappable. */
+  body.nav-open .site-header { pointer-events: none; }
+  body.nav-open #navMenu { pointer-events: auto; }
   /* Scroll-lock: pin the body in place (offset set from JS) so opening the
      drawer never scrolls/jumps the page. Restored on close. */
   body.nav-open { position: fixed; left: 0; right: 0; width: 100%; overflow: hidden; }

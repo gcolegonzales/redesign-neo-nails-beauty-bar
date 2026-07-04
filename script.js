@@ -175,6 +175,10 @@
     // Tapping the scrim (page area) closes the menu.
     scrim.addEventListener("click", closeNav);
 
+    // Explicit in-drawer close (X).
+    var navClose = document.getElementById("navClose");
+    if (navClose) navClose.addEventListener("click", closeNav);
+
     // Tapping any link closes the menu.
     menu.addEventListener("click", function (e) {
       if (e.target.closest("a")) closeNav();
